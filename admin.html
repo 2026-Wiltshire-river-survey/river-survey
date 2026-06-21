@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — River Survey Portal</title>
+<link rel="stylesheet" href="css/shared.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- ADMIN LOGIN -->
+<div id="screen-login" class="screen">
+  <div class="login-wrap">
+    <div class="login-logo">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <path d="M4 24 Q10 16 20 20 Q30 24 36 16" stroke="#2563A8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M4 30 Q10 22 20 26 Q30 30 36 22" stroke="#2563A8" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+        <circle cx="20" cy="13" r="4" fill="#2563A8" opacity="0.15" stroke="#2563A8" stroke-width="1.5"/>
+        <path d="M20 9 L20 6 M16 11 L13 9 M24 11 L27 9" stroke="#2563A8" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <h1>Admin Panel</h1>
+        <p class="subtitle">River Survey Portal</p>
+      </div>
+    </div>
+    <div class="card">
+      <div id="login-error" class="alert alert-error hidden"></div>
+      <div class="field">
+        <label for="admin-password">Admin password</label>
+        <input id="admin-password" type="password" placeholder="Enter admin password" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="doAdminLogin()">Sign in as admin</button>
+    </div>
+    <p class="login-admin-link"><a href="index.html">&larr; Back to agent portal</a></p>
+  </div>
+</div>
+
+<!-- ADMIN MAIN -->
+<div id="screen-main" class="screen hidden">
+  <nav class="topnav">
+    <div class="topnav-brand">
+      <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
+        <path d="M4 24 Q10 16 20 20 Q30 24 36 16" stroke="#2563A8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span>Admin Panel</span>
+      <span class="badge badge-amber" style="font-size:11px;padding:2px 8px;">Admin</span>
+    </div>
+    <div class="topnav-agent">
+      <a href="index.html" class="btn btn-sm">Agent portal &rarr;</a>
+      <button class="btn btn-sm" onclick="doAdminLogout()">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" id="tab-fields" onclick="switchTab('fields')">Survey fields</button>
+      <button class="tab" id="tab-locations" onclick="switchTab('locations')">Sampling locations</button>
+      <button class="tab" id="tab-dashboard" onclick="switchTab('dashboard')">Dashboard</button>
+      <button class="tab" id="tab-data" onclick="switchTab('data')">All data</button>
+      <button class="tab" id="tab-settings" onclick="switchTab('settings')">Settings</button>
+    </div>
+
+    <!-- SURVEY FIELDS -->
+    <div id="pane-fields">
+      <div class="pane-header">
+        <div>
+          <h2>Survey fields</h2>
+          <p class="status-text">Configure the measurements agents will record. Up to 10 fields.</p>
+        </div>
+        <button class="btn btn-primary" onclick="addField()" id="add-field-btn">+ Add field</button>
+      </div>
+      <div id="fields-list"></div>
+      <div class="save-bar">
+        <span id="fields-save-status" class="status-text"></span>
+        <button class="btn btn-primary" onclick="saveFields()">Save fields</button>
+      </div>
+    </div>
+
+    <!-- SAMPLING LOCATIONS -->
+    <div id="pane-locations" class="hidden">
+      <div class="pane-header">
+        <div>
+          <h2>Sampling locations</h2>
+          <p class="status-text">Named sites agents can select. Grid reference auto-fills on selection.</p>
+        </div>
+        <button class="btn btn-primary" onclick="addLocation()">+ Add location</button>
+      </div>
+      <div id="locations-list"></div>
+      <div class="save-bar">
+        <span id="locations-save-status" class="status-text"></span>
+        <button class="btn btn-primary" onclick="saveLocations()">Save locations</button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="pane-dashboard" class="hidden">
+      <div class="pane-header">
+        <p id="dash-status" class="status-text"></p>
+        <button class="btn btn-sm" onclick="loadDashboard()">&#8635; Refresh</button>
+      </div>
+      <div class="stat-grid" id="stat-grid"></div>
+      <div class="two-col">
+        <div class="card">
+          <h3>Submissions by region</h3>
+          <div id="region-chart"></div>
+        </div>
+        <div class="card">
+          <h3>Submissions by location</h3>
+          <div id="location-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALL DATA -->
+    <div id="pane-data" class="hidden">
+      <div class="pane-header">
+        <p id="data-status" class="status-text"></p>
+        <div class="pane-header-actions">
+          <button class="btn btn-sm" onclick="loadAllData()">&#8635; Refresh</button>
+          <button class="btn btn-sm" onclick="exportAllCSV()">&#8595; Export all CSV</button>
+        </div>
+      </div>
+      <div id="all-data-wrap"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="pane-settings" class="hidden">
+      <div class="card" style="max-width:480px">
+        <h2 style="margin-bottom:1.25rem">Settings</h2>
+        <div class="field">
+          <label for="new-password">Change admin password</label>
+          <input id="new-password" type="password" placeholder="New password">
+        </div>
+        <div class="field">
+          <label for="confirm-password">Confirm new password</label>
+          <input id="confirm-password" type="password" placeholder="Confirm new password">
+        </div>
+        <div id="password-msg" class="alert hidden" style="margin-bottom:1rem"></div>
+        <button class="btn btn-primary" onclick="changePassword()">Update password</button>
+        <hr style="margin:1.5rem 0;border:none;border-top:1px solid var(--border)">
+        <h3 style="margin-bottom:.75rem">Supabase connection</h3>
+        <div class="field">
+          <label>Project URL</label>
+          <input id="supa-url" type="text" placeholder="https://xxxx.supabase.co" autocomplete="off">
+        </div>
+        <div class="field">
+          <label>Anon key</label>
+          <input id="supa-key" type="text" placeholder="eyJ..." autocomplete="off">
+        </div>
+        <div id="supa-msg" class="alert hidden" style="margin-bottom:1rem"></div>
+        <button class="btn btn-primary" onclick="saveSupabaseConfig()">Save connection</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/db.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
