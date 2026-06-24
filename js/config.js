@@ -3,12 +3,12 @@
 const CONFIG = {
   // Replace these with your Supabase project values
   // Found in: Supabase Dashboard → Project Settings → API
-  SUPABASE_URL: localStorage.getItem('supa_url') || 'YOUR_SUPABASE_URL',
-  SUPABASE_ANON_KEY: localStorage.getItem('supa_key') || 'YOUR_SUPABASE_ANON_KEY',
+  SUPABASE_URL: localStorage.getItem('supa_url') || 'https://hkgihtfumxrigvowixfb.supabase.co',
+  SUPABASE_ANON_KEY: localStorage.getItem('supa_key') || 'sb_publishable_ubWF3CZxmqhtBukil_FaKA_vxKJfThF',
 
   // Admin password (also configurable via admin Settings tab)
   ADMIN_PASSWORD_KEY: 'river_survey_admin_pw',
-  DEFAULT_ADMIN_PASSWORD: 'admin1234',
+  DEFAULT_ADMIN_PASSWORD: 'd3v1zE5?',
 
   // Storage keys for config stored in Supabase
   FIELDS_CONFIG_KEY: 'survey_fields_config',
